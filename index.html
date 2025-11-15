@@ -1,1 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vinted Price Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      background-color: #f7f7f7;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 90%;
+      padding: 12px;
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      font-size: 16px;
+      line-height: 1.5;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: inline-block;
+      min-width: 250px;
+    }
+    .loading {
+      color: #555;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
 
+<h1>Vinted Price Checker</h1>
+
+<input id="query" type="text" placeholder="Enter item name..." />
+<br>
+<button onclick="checkPrice()">Check Price</button>
+
+<div id="result"></div>
+
+<script>
+async function checkPrice() {
+  const query = document.getElementById('query').value.trim();
+  const resultDiv = document.getElementById('result');
+
+  if (!query) {
+    resultDiv.innerHTML = '<span class="error">Please enter an item name.</span>';
+    return;
+  }
+
+  resultDiv.innerHTML = '<span class="loading">Loading...</span>';
+
+  try {
+    const response = await fetch(`https://YOUR-WORKER-URL.workers.dev/api/price?search=${encodeURIComponent(query)}`);
+    const data = await response.json();
+
+    if (data.error) {
+      resultDiv.innerHTML = `<span class="error">${data.error}</span>`;
+      return;
+    }
+
+    resultDiv.innerHTML = `
+      <strong>Search:</strong> ${data.search}<br>
+      <strong>Items found:</strong> ${data.count}<br>
+      <strong>Average price:</strong> ${data.average_price} ${data.currency}<br>
+      <strong>Median price:</strong> ${data.median_price} ${data.currency}<br>
+      <strong>Min price:</strong> ${data.min_price} ${data.currency}<br>
+      <strong>Max price:</strong> ${data.max_price} ${data.currency}
+    `;
+
+  } catch (err) {
+    resultDiv.innerHTML = `<span class="error">Error fetching data. Please try again.</span>`;
+    console.error(err);
+  }
+}
+</script>
+
+</body>
+</html>
