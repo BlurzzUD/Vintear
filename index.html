@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vinted Price Checker</title>
+  <title>Vinted Ár Számoló</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -59,9 +59,9 @@
 
 <h1>Vinted Price Checker</h1>
 
-<input id="query" type="text" placeholder="Enter item name..." />
+<input id="query" type="text" placeholder="Írd be a termék nevét..." />
 <br>
-<button onclick="checkPrice()">Check Price</button>
+<button onclick="checkPrice()">Ár megnézése</button>
 
 <div id="result"></div>
 
@@ -71,11 +71,11 @@ async function checkPrice() {
   const resultDiv = document.getElementById('result');
 
   if (!query) {
-    resultDiv.innerHTML = '<span class="error">Please enter an item name.</span>';
+    resultDiv.innerHTML = '<span class="error">Légyszives írd be a termék nevét.</span>';
     return;
   }
 
-  resultDiv.innerHTML = '<span class="loading">Loading...</span>';
+  resultDiv.innerHTML = '<span class="loading">Töltés...</span>';
 
   try {
     const response = await fetch(`https://vintedapi.bsnr.xyz//api/price?search=${encodeURIComponent(query)}`);
